@@ -1,0 +1,92 @@
+json-server para simular un servidor y consumir los datos.
+
+Json-server está listado como dependiente del package.json, que es el archivo donde encontramos todas las bibliotecas externas que estamos usando en nuestro proyecto. Al hacer npm install dentro de la carpeta admin, que es la carpeta del proyecto (veremos esta parte en el video) empieza la descarga de json-server automáticamente.
+
+El comando json-server --watch db.json que usamos en la clase necesita ser ejecutado dentro de la carpeta del proyecto de admin, caso contrario este comando no será reconocido.
+
+Otra información importante es que para funcionar localmente, al invés de ejecutar el comando json-server --watch db.json, como lo hacemos en clase, tenemos que ejecutar este comando con npx adelante:
+
+npx json-server --watch db.json
+
+En el caso de que quieras utilizar el comando sin el npx adelante es necesario instalar json-server de manera global:
+
+npm install -g json-server
+
+Después, para subir el servidor, ejecutamos json-server --watch db.json, como lo hacemos en clase.
+
+movePersonaje(‘100’, ‘Izquierda’)
+    .then(() => movePersonaje(‘800’, ‘Derecha’))
+    .then(() => movePersonaje(‘200’, ‘Izquierda’))
+    .then(() => movePersonaje(‘10’, ‘Derecha’ ))
+    .then(() => movePersonaje(‘60’, ‘Izquierda’ ))
+
+Utilizando promise podemos organizar nuestro código de forma estructural facilitando su lectura y mantenimiento.
+
+Ya sabemos como callback hell dificulta nuestra vida cuando hablamos de manutención y complejidad de código, como en este ejemplo abajo, donde tenemos varias funciones auxiliares una dentro de la otra para ejecutar el movimiento de un personaje:
+
+moverPersonaje(‘100’, ‘Izquierda’, function() {
+    moverPersonaje(‘800’, ‘Derecha’, function() {
+        moverPersonaje(‘200’, ‘Izquierda’, function() {
+            moverPersonaje(‘10’, ‘Derecha’, function() {
+                moverPersonaje(‘60’, ‘Izquierda’, function() {
+                })
+            })
+        })
+    })
+})
+
+Callback hell termina siendo necesario en esos casos ya que de esa manera garantizamos que la segunda función solamente será disparada una vez que la primera es concluida, y así sigue, ya que en ese escenario de ejemplo estamos trabajando con funciones asíncronas para mover el personaje.
+
+Vimos también que una alternativa para dejar el código más “limpio” es utilizar una Promise. Con el regreso de un objeto de promesa, podemos encadenar el .then() garantizando la secuencia de la ejecución.
+
+moverPersonaje(‘100’, ‘Izquierda’)
+    .then(() => moverPersonaje(‘800’, ‘Derecha’))
+    .then(() => moverPersonaje(‘200’, ‘Izquierda’))
+    .then(() => moverPersonaje(‘10’, ‘Derecha’ ))
+    .then(() => moverPersonaje(‘60’, ‘Izquierda’ ))
+
+Ese escenario donde hacemos varias requisiciones que son dependientes una de la otra es muy común, y en ese escenario podemos hacer el uso del método .all de la Promise. Pasando cada una de las funciones dentro de un arreglo como argumento de la Promise.all podemos ejecutar todas sus funciones en orden sin la necesidad de encadenar varios .then().
+
+Promise.all([
+    moverPersonaje(‘100’, ‘Izquierda’),
+    moverPersonaje(‘800’, ‘Derecha’),
+    moverPersonaje(‘200’, ‘Izquierda’),
+    moverPersonaje(10, ‘Izquierda’),
+    moverPersonaje(‘60’, ‘Izquierda’)
+])
+.then(...)
+El Promise.all ejecutará todas las llamadas en el orden y regresará una respuesta que podrá ser utilizada en el .then.
+
+
+console.log('1');
+setTimeout(() => console.log('2'), 1000);
+console.log('3')
+
+Salida: 1, 3, 2
+setTimeOut() es una instrucción de WebApi, por eso es mandado para la callback queue y es ejecutado después de los dos console.log, que son ejecutados primero ya que son comandos nativos de lenguaje.
+
+export const borrarCliente = (id) => {
+    return fetch(`http://localhost:3000/profile/${id}`, {
+        method: "DELETE",
+    })
+}
+además de indicar la acción pasando el verbo http DELETE, también necesitamos para un id que será utilizado para identificar cada uno de los clientes.
+
+const agarrarURL = new URL( window.location )
+const id = agarrarURL.searchParams.get(‘id’)
+Creamos un nuevo objeto URL que será capaz de decirnos cuál dirección de la página estamos. Por medio de la propiedad searchParams podemos acceder al método get y seleccionar el id que vemos en la url.
+
+
+const render = async () =>  {
+    try {
+        const listaClientes = await clienteService.listaClientes()
+        listaClientes.forEach(elemento => {
+            tabla.appendChild(creaNuevaLinea(elemento.nombre,elemento.correo, elemento.id))
+        })
+    }
+    catch(error){
+        console.log(error)
+        window.location.href="../telas/error.html"
+    }
+}
+Utilizando async/await tenemos una función asíncrona que podemos leer de forma estructural, lo que nos trae beneficios de mantenimiento y legibilidad para nuestro código. Y el uso de try/catch nos ayuda a lidiar con los errores.
